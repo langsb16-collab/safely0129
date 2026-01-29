@@ -89,6 +89,28 @@ const NavContent = ({ isMenuOpen, setIsMenuOpen }: { isMenuOpen: boolean, setIsM
   );
 };
 
+const MobileBottomNav = () => {
+  const location = useLocation();
+  const pathname = location.pathname;
+
+  return (
+    <nav className="lg:hidden sticky bottom-0 z-50 bg-white/95 backdrop-blur-xl border-t border-gray-100 flex justify-around items-center h-20 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] rounded-t-[2.5rem]">
+      <Link to="/" className={`flex flex-col items-center gap-1.5 transition-all ${pathname === '/' ? 'text-[#1565C0]' : 'text-gray-400'}`}>
+        <Camera size={26} strokeWidth={2.5} />
+        <span className="text-[10px] font-black uppercase tracking-widest">신고하기</span>
+      </Link>
+      <Link to="/reports" className={`flex flex-col items-center gap-1.5 transition-all ${pathname === '/reports' ? 'text-[#1565C0]' : 'text-gray-400'}`}>
+        <ClipboardList size={26} strokeWidth={2.5} />
+        <span className="text-[10px] font-black uppercase tracking-widest">나의내역</span>
+      </Link>
+      <Link to="/admin" className={`flex flex-col items-center gap-1.5 transition-all ${pathname.startsWith('/admin') ? 'text-[#1565C0]' : 'text-gray-400'}`}>
+        <LayoutGrid size={26} strokeWidth={2.5} />
+        <span className="text-[10px] font-black uppercase tracking-widest">관제현황</span>
+      </Link>
+    </nav>
+  );
+};
+
 const App: React.FC = () => {
   const [reports, setReports] = useState<ComplaintReport[]>(() => {
     const saved = localStorage.getItem('gyongsan_reports');
@@ -123,7 +145,6 @@ const App: React.FC = () => {
           </div>
         </main>
 
-        {/* Footer for PC */}
         <footer className="bg-white border-t border-[#E0E0E0] py-12 hidden lg:block">
           <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex items-center gap-4">
@@ -143,21 +164,7 @@ const App: React.FC = () => {
           </div>
         </footer>
 
-        {/* Bottom Navigation for Mobile (Citizen) */}
-        <nav className="lg:hidden sticky bottom-0 z-50 bg-white/95 backdrop-blur-xl border-t border-gray-100 flex justify-around items-center h-20 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] rounded-t-[2.5rem]">
-          <Link to="/" className={`flex flex-col items-center gap-1.5 transition-all ${useLocation().pathname === '/' ? 'text-[#1565C0]' : 'text-gray-400'}`}>
-            <Camera size={26} strokeWidth={2.5} />
-            <span className="text-[10px] font-black uppercase tracking-widest">신고하기</span>
-          </Link>
-          <Link to="/reports" className={`flex flex-col items-center gap-1.5 transition-all ${useLocation().pathname === '/reports' ? 'text-[#1565C0]' : 'text-gray-400'}`}>
-            <ClipboardList size={26} strokeWidth={2.5} />
-            <span className="text-[10px] font-black uppercase tracking-widest">나의내역</span>
-          </Link>
-          <Link to="/admin" className={`flex flex-col items-center gap-1.5 transition-all ${useLocation().pathname === '/admin' ? 'text-[#1565C0]' : 'text-gray-400'}`}>
-            <LayoutGrid size={26} strokeWidth={2.5} />
-            <span className="text-[10px] font-black uppercase tracking-widest">관제현황</span>
-          </Link>
-        </nav>
+        <MobileBottomNav />
       </div>
     </Router>
   );

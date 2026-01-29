@@ -27,9 +27,9 @@ export interface LocationInfo {
   lat: number;
   lng: number;
   address?: string;
-  accuracy?: number; // GPS 오차 범위 (m)
-  admin_area?: string; // 행정동 (예: 중방동)
-  road_name?: string; // 도로명 (예: 대학로)
+  accuracy?: number; 
+  admin_area?: string; 
+  road_name?: string; 
   location_source?: 'gps' | 'wifi' | 'cell';
 }
 
@@ -62,4 +62,34 @@ export interface AIClassificationResult {
   reasoning: string;
   risk_score: number;
   priority: number;
+}
+
+export type DayType = 'WEEKDAY' | 'WEEKEND';
+
+export interface TrafficSegment {
+  id: string;
+  name: string;
+  path: [number, number][];
+  status: 'GREEN' | 'ORANGE' | 'RED' | 'BLACK';
+  speed: number;
+  isHabitual: boolean;
+  incidentDescription?: string;
+  predictionScore?: number;
+  ref_speed_kmh?: number;
+}
+
+export interface PredictionLog {
+  link_id: string;
+  hour: string;
+  dayType: DayType;
+  pred_speed: number;
+  actual_speed: number;
+  error: number;
+  isCorrect: boolean;
+}
+
+export interface PredictionStat {
+  hour: string;
+  accuracy: number;
+  mae: number;
 }

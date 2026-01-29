@@ -1,27 +1,37 @@
 
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Camera, ClipboardList, Menu, X, Bell, User, ShieldCheck, MessageSquare, LayoutGrid } from 'lucide-react';
-import ReportForm from './components/ReportForm';
-import AdminDashboard from './components/AdminDashboard';
-import ReportList from './components/ReportList';
-import { ComplaintReport, ComplaintStatus } from './types';
-import { MOCK_REPORTS } from './constants';
+import { Camera, ClipboardList, Menu, X, Bell, User, ShieldCheck, MessageSquare, LayoutGrid, Landmark } from 'lucide-react';
+import ReportForm from './components/ReportForm.tsx';
+import AdminDashboard from './components/AdminDashboard.tsx';
+import ReportList from './components/ReportList.tsx';
+import { ComplaintReport, ComplaintStatus } from './types.ts';
+import { MOCK_REPORTS } from './constants.ts';
 
 const NavContent = ({ isMenuOpen, setIsMenuOpen }: { isMenuOpen: boolean, setIsMenuOpen: (v: boolean) => void }) => {
   const location = useLocation();
   const isAdminPath = location.pathname.startsWith('/admin');
+  const [logoError, setLogoError] = useState(false);
 
   return (
     <header className={`sticky top-0 z-50 transition-all duration-300 ${isAdminPath ? 'bg-slate-900 border-b border-white/10' : 'bg-[#1565C0] border-b border-blue-400/20'} text-white shadow-xl`}>
       <div className="container mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-3 group">
-          <div className="bg-white p-1.5 sm:p-2 rounded-xl group-hover:scale-105 transition shadow-lg flex items-center justify-center min-w-[80px] sm:min-w-[100px] h-8 sm:h-10 border border-white/20">
-            <img 
-              src="https://www.gbgs.go.kr/common/images/logo_top.png" 
-              alt="경산시 로고" 
-              className="h-full w-auto object-contain block contrast-110"
-            />
+          <div className="bg-white p-1.5 sm:p-2 rounded-xl group-hover:scale-105 transition shadow-lg flex items-center justify-center min-w-[80px] sm:min-w-[100px] h-8 sm:h-10 border border-white/20 overflow-hidden">
+            {!logoError ? (
+              <img 
+                src="https://www.gbgs.go.kr/common/images/logo_top.png" 
+                alt="경산시 로고" 
+                className="h-full w-auto object-contain block contrast-110"
+                referrerPolicy="no-referrer"
+                onError={() => setLogoError(true)}
+              />
+            ) : (
+              <div className="flex items-center gap-1.5 text-[#1565C0] font-black italic text-xs sm:text-sm">
+                <Landmark size={16} />
+                <span>GYEONGSAN</span>
+              </div>
+            )}
           </div>
           <div className="flex flex-col">
             <div className="flex items-center gap-1">
@@ -113,8 +123,13 @@ const MobileBottomNav = () => {
 
 const App: React.FC = () => {
   const [reports, setReports] = useState<ComplaintReport[]>(() => {
-    const saved = localStorage.getItem('gyongsan_reports');
-    return saved ? JSON.parse(saved) : MOCK_REPORTS;
+    try {
+      const saved = localStorage.getItem('gyongsan_reports');
+      return saved ? JSON.parse(saved) : MOCK_REPORTS;
+    } catch (e) {
+      console.error("Failed to load reports from localStorage", e);
+      return MOCK_REPORTS;
+    }
   });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -148,8 +163,13 @@ const App: React.FC = () => {
         <footer className="bg-white border-t border-[#E0E0E0] py-12 hidden lg:block">
           <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="flex items-center gap-4">
-              <div className="bg-white p-2 rounded-xl border border-gray-100 flex items-center justify-center min-w-[90px] h-9 shadow-sm">
-                <img src="https://www.gbgs.go.kr/common/images/logo_top.png" alt="경산시" className="h-full w-auto object-contain grayscale opacity-60 hover:grayscale-0 transition duration-300" />
+              <div className="bg-white p-2 rounded-xl border border-gray-100 flex items-center justify-center min-w-[90px] h-9 shadow-sm overflow-hidden">
+                <img 
+                  src="https://www.gbgs.go.kr/common/images/logo_top.png" 
+                  alt="경산시" 
+                  className="h-full w-auto object-contain grayscale opacity-60 hover:grayscale-0 transition duration-300"
+                  referrerPolicy="no-referrer"
+                />
               </div>
               <div className="text-[10px] font-bold text-gray-400 uppercase tracking-widest leading-tight">
                 Gyeongsan AnsimTalk AI Civic Platform<br/>

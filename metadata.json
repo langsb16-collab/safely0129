@@ -1,0 +1,8 @@
+{
+  "name": "경산안심톡",
+  "description": "경북 경산시 시민들을 위한 AI 기반 생활민원 신고 플랫폼입니다. 사진 한 장으로 도시 안전을 지키는 스마트 소통 채널입니다.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}
